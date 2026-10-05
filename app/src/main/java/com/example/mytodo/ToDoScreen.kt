@@ -1,6 +1,14 @@
 package com.example.mytodo
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -71,28 +79,60 @@ fun ToDoScreen() {
 
 }
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun MyLazyColumn(todos: List<Todo>, onCheckedChange2: (Todo,Boolean) -> Unit){
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(todos){
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        items(todos, key = { it.id.toString() }){
             todo ->
             TodoItem(todo, {checked -> onCheckedChange2(todo, checked)})
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoItem(todo: Todo, onCheckedChange: (Boolean) -> Unit){
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(),
-        shape = CardDefaults.shape
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (todo.isDone)
+                MaterialTheme.colorScheme.surfaceVariant
+            else
+                MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = if (todo.isDone) 0.dp else 3.dp
+        ),
+        onClick = { onCheckedChange(!todo.isDone) }
     ){
-        Row() {
-            Text(todo.text)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Checkbox(
                 checked = todo.isDone,
                 onCheckedChange = onCheckedChange
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = todo.text,
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyLarge,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                textDecoration = if (todo.isDone) TextDecoration.LineThrough else TextDecoration.None,
+                color = if (todo.isDone)
+                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                else
+                    MaterialTheme.colorScheme.onSurface
             )
         }
     }
