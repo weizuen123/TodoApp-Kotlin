@@ -42,18 +42,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun ToDoScreen() {
-
-    var showDialog by remember { mutableStateOf(false) }
+    val viewModel: TodoViewModel = viewModel()
     var textUserTyped by remember {mutableStateOf("")}
     val todoList = remember { mutableStateListOf<Todo>() }
 
     Scaffold(modifier = Modifier.fillMaxSize(),
-        floatingActionButton = { AddToDo( {showDialog = true}) }) { innerPadding ->
+        floatingActionButton = { AddToDo({ viewModel.onClickForAddButton() }) }) { innerPadding ->
 
             if(showDialog == true){
                 AddToDoDialog(
