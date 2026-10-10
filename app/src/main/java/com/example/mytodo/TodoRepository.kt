@@ -12,7 +12,6 @@ class TodoRepository {
         _todoList.add(Todo(text = textUserTyped))
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     fun setDone(todo: Todo, checked: Boolean){
         val index = _todoList.indexOfFirst { it.id == todo.id }
         if (index != -1) {

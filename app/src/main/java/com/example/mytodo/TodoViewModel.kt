@@ -20,7 +20,6 @@ class TodoViewModel : ViewModel(){
         showDialog = true
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     fun onConfirmButton(){
         repository.addTodo(textUserTyped)
         showDialog = false
@@ -36,7 +35,6 @@ class TodoViewModel : ViewModel(){
         textUserTyped = it
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     fun onTodoCheckChange(todo: Todo, checked: Boolean){
         repository.setDone(todo,checked)
     }

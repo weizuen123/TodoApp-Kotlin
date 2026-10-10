@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 fun ToDoScreen() {
     val viewModel: TodoViewModel = viewModel()
@@ -76,7 +75,6 @@ fun ToDoScreen() {
 
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun MyLazyColumn(todos: List<Todo>, onCheckedChange2: (Todo,Boolean) -> Unit){
     LazyColumn(
@@ -91,7 +89,6 @@ fun MyLazyColumn(todos: List<Todo>, onCheckedChange2: (Todo,Boolean) -> Unit){
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoItem(todo: Todo, onCheckedChange: (Boolean) -> Unit){
     Card(
