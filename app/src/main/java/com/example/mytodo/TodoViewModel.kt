@@ -10,7 +10,8 @@ import kotlin.text.set
 import kotlin.uuid.ExperimentalUuidApi
 
 class TodoViewModel : ViewModel(){
-    val todoList = mutableStateListOf<Todo>()
+    private val repository = TodoRepository()
+    val todoList: List<Todo> get() = repository.todoList
     var showDialog by mutableStateOf(false)
         private set
     var textUserTyped by mutableStateOf("")
@@ -21,7 +22,7 @@ class TodoViewModel : ViewModel(){
 
     @OptIn(ExperimentalUuidApi::class)
     fun onConfirmButton(){
-        todoList.add(Todo(text = textUserTyped))
+        repository.addTodo(textUserTyped)
         showDialog = false
         textUserTyped = ""
     }
@@ -31,17 +32,14 @@ class TodoViewModel : ViewModel(){
         textUserTyped = ""
     }
 
-
     fun onTextChange(it: String){
         textUserTyped = it
     }
 
     @OptIn(ExperimentalUuidApi::class)
     fun onTodoCheckChange(todo: Todo, checked: Boolean){
-        val index = todoList.indexOfFirst { it.id == todo.id }
-        todoList[index] = todo.copy(isDone = checked)
+        repository.setDone(todo,checked)
     }
-
 
 }
 

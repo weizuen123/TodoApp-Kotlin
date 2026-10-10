@@ -50,8 +50,6 @@ import kotlin.uuid.ExperimentalUuidApi
 fun ToDoScreen() {
     val viewModel: TodoViewModel = viewModel()
 
-
-
     Scaffold(modifier = Modifier.fillMaxSize(),
         floatingActionButton = { AddToDo({ viewModel.onClickForAddButton() }) }) { innerPadding ->
 
