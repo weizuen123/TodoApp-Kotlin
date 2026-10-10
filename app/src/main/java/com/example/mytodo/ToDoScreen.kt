@@ -49,33 +49,29 @@ import kotlin.uuid.ExperimentalUuidApi
 @Composable
 fun ToDoScreen() {
     val viewModel: TodoViewModel = viewModel()
-    var textUserTyped by remember {mutableStateOf("")}
-    val todoList = remember { mutableStateListOf<Todo>() }
+
+
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         floatingActionButton = { AddToDo({ viewModel.onClickForAddButton() }) }) { innerPadding ->
 
-            if(showDialog == true){
+            if(viewModel.showDialog){
                 AddToDoDialog(
                     innerPadding,
-                    onDismissReq = {showDialog = false
-                        textUserTyped = ""},
-                    confirmBut = {todoList.add(Todo(text = textUserTyped))
-                                 showDialog = false
-                                 textUserTyped = ""},
-                    dismissBut = {showDialog = false
-                        textUserTyped = ""},
-                    textUserTyped = textUserTyped,
+                    onDismissReq = {viewModel.onDismissDialog()},
+                    confirmBut = {viewModel.onConfirmButton()},
+                    dismissBut = {viewModel.onDismissDialog()},
+                    textUserTyped = viewModel.textUserTyped,
                     onTextChange = {
-                        textUserTyped = it
+                        viewModel.onTextChange(it)
                     }
                     )
             }
 
             Column(modifier = Modifier.padding(innerPadding)) {
-                MyLazyColumn(todoList, { todo, checked ->
-                    val index = todoList.indexOfFirst { it.id == todo.id }
-                    todoList[index] = todo.copy(isDone = checked)
+                MyLazyColumn(viewModel.todoList,
+                    { todo, checked ->
+                    viewModel.onTodoCheckChange(todo,checked)
                 })
             }
     }
