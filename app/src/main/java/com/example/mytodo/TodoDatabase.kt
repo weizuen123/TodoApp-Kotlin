@@ -14,13 +14,13 @@ abstract class TodoDatabase : RoomDatabase() {
         private var INSTANCE: TodoDatabase? = null
 
         fun getDatabase(context: Context): TodoDatabase {
-            return INSTANCE ?: synchronized(this){
-                Room.databaseBuilder(
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
                     TodoDatabase::class.java,
                     "todo_database"
                 )
-                    .fallbackToDestructiveMigration(dropAllTables = true)  // learning
+                    .fallbackToDestructiveMigration(dropAllTables = true) //learning, so do this first
                     .build()
                     .also { INSTANCE = it }
             }
