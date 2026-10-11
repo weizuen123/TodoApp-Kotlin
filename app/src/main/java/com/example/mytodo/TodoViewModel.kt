@@ -6,12 +6,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlin.text.set
 import kotlin.uuid.ExperimentalUuidApi
 
-class TodoViewModel : ViewModel(){
-    private val repository = TodoRepository()
-    val todoList: List<Todo> get() = repository.todoList
+class TodoViewModel(private val repository: TodoRepository) : ViewModel(){
+    val todoList: StateFlow<List<Todo>> = repository.todos.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = emptyList()
+    )
     var showDialog by mutableStateOf(false)
         private set
     var textUserTyped by mutableStateOf("")
@@ -21,7 +32,9 @@ class TodoViewModel : ViewModel(){
     }
 
     fun onConfirmButton(){
-        repository.addTodo(textUserTyped)
+        viewModelScope.launch {
+            repository.addTodo(textUserTyped)
+        }
         showDialog = false
         textUserTyped = ""
     }
@@ -36,9 +49,19 @@ class TodoViewModel : ViewModel(){
     }
 
     fun onTodoCheckChange(todo: Todo, checked: Boolean){
-        repository.setDone(todo,checked)
+        viewModelScope.launch {
+            repository.setDone(todo, checked)
+        }
     }
 
+    companion object {
+        val Factory = viewModelFactory {
+            initializer {
+                val app = this[APPLICATION_KEY] as TodoApplication
+                TodoViewModel(app.container.todoRepository)
+            }
+        }
+    }
 }
 
 

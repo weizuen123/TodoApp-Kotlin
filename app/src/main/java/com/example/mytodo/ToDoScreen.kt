@@ -42,13 +42,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun ToDoScreen() {
     val viewModel: TodoViewModel = viewModel()
-
+    val todos by viewModel.todoList.collectAsStateWithLifecycle()
     Scaffold(modifier = Modifier.fillMaxSize(),
         floatingActionButton = { AddToDo({ viewModel.onClickForAddButton() }) }) { innerPadding ->
 
@@ -66,7 +67,7 @@ fun ToDoScreen() {
             }
 
             Column(modifier = Modifier.padding(innerPadding)) {
-                MyLazyColumn(viewModel.todoList,
+                MyLazyColumn(todos,
                     { todo, checked ->
                     viewModel.onTodoCheckChange(todo,checked)
                 })

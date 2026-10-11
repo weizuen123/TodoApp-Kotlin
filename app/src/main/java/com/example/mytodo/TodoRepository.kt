@@ -1,22 +1,18 @@
 package com.example.mytodo
 
 import androidx.compose.runtime.mutableStateListOf
+import kotlinx.coroutines.flow.Flow
 import kotlin.uuid.ExperimentalUuidApi
 
-class TodoRepository {
-    private val _todoList = mutableStateListOf<Todo>()
-    val todoList: List<Todo> get() = _todoList
+class TodoRepository(private val todoDao: TodoDao) {
+    val todos: Flow<List<Todo>> = todoDao.getAll()
 
-    @OptIn(ExperimentalUuidApi::class)
-    fun addTodo(textUserTyped: String){
-        _todoList.add(Todo(text = textUserTyped))
+    suspend fun addTodo(textUserTyped: String){
+        todoDao.insert(Todo(text = textUserTyped))
     }
 
-    fun setDone(todo: Todo, checked: Boolean){
-        val index = _todoList.indexOfFirst { it.id == todo.id }
-        if (index != -1) {
-            _todoList[index] = todo.copy(isDone = checked)
-        }
+    suspend fun setDone(todo: Todo, isDone: Boolean){
+        todoDao.update(todo.copy(isDone = isDone))
     }
 
 }
