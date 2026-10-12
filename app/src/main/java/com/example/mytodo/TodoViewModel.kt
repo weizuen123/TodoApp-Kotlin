@@ -54,6 +54,12 @@ class TodoViewModel(private val repository: TodoRepository) : ViewModel(){
         }
     }
 
+    fun onTodoDelete(todo: Todo){
+        viewModelScope.launch {
+            repository.deleteTodo(todo)
+        }
+    }
+
     companion object {
         val Factory = viewModelFactory {
             initializer {

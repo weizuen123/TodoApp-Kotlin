@@ -1,6 +1,7 @@
 package com.example.mytodo
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -15,7 +16,12 @@ interface TodoDao {
     @Update
     suspend fun update(todo: Todo)
 
+    @Delete
+    suspend fun delete(todo: Todo)
+
     @Query("SELECT * FROM todos")
     fun getAll(): Flow<List<Todo>>
+
+
 
 }
