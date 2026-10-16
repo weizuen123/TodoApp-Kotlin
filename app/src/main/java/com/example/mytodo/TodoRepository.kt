@@ -1,10 +1,9 @@
 package com.example.mytodo
 
-import androidx.compose.runtime.mutableStateListOf
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlin.uuid.ExperimentalUuidApi
 
-class TodoRepository(private val todoDao: TodoDao) {
+class TodoRepository @Inject constructor(private val todoDao: TodoDao) {
     val todos: Flow<List<Todo>> = todoDao.getAll()
 
     suspend fun addTodo(textUserTyped: String){

@@ -14,10 +14,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.text.set
 import kotlin.uuid.ExperimentalUuidApi
 
-class TodoViewModel(private val repository: TodoRepository) : ViewModel(){
+class TodoViewModel @Inject constructor(private val repository: TodoRepository) : ViewModel(){
     val todoList: StateFlow<List<Todo>> = repository.todos.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
@@ -60,14 +61,6 @@ class TodoViewModel(private val repository: TodoRepository) : ViewModel(){
         }
     }
 
-    companion object {
-        val Factory = viewModelFactory {
-            initializer {
-                val app = this[APPLICATION_KEY] as TodoApplication
-                TodoViewModel(app.container.todoRepository)
-            }
-        }
-    }
 }
 
 

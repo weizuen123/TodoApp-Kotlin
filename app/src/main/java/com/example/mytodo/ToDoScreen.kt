@@ -49,13 +49,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun ToDoScreen() {
-    val viewModel: TodoViewModel = viewModel(factory = TodoViewModel.Factory)
+    val viewModel: TodoViewModel = hiltViewModel()
     val todos by viewModel.todoList.collectAsStateWithLifecycle()
     Scaffold(modifier = Modifier.fillMaxSize(),
         floatingActionButton = { AddToDo({ viewModel.onClickForAddButton() }) }) { innerPadding ->
